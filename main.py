@@ -1,14 +1,17 @@
 import random
 
+# set the seed of PRNG to get predictive results
+# random.seed(3)
 
 reader = open("data/jekyll.txt")
 successor_map = {}
 window = []
 
+
 for line in reader:
     for word in line.split():
-        # clean_word = word.strip(".;,-“’”:?—‘!()_").lower()
-        window.append(word)
+        clean_word = word.strip(".;,-“’”:?—‘!()_").lower()
+        window.append(clean_word)
 
         if len(window) == 3:
             key = window[0], window[1]
@@ -20,9 +23,8 @@ for line in reader:
             window.pop(0)
 
 
-# random.seed(3)
 # word1 & word2 need to form a bigram that is present in the source text
-word1 = "The"
+word1 = "the"
 word2 = "lawyer"
 
 for i in range(15):
