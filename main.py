@@ -25,7 +25,7 @@ def main() -> None:
     )
     word1, word2 = initial_bigram
 
-    for _ in range(15):
+    for _ in range(args.num_words):
         print(word1, end=" ")
         successors = successor_map.get((word1, word2), None)
         if not successors:
@@ -44,7 +44,7 @@ def print_most_common_bigrams(bigram_counts: Counter, n_common_bigrams: int) -> 
 
 
 def choose_random_bigram(bigram_counts: Counter, print_bigram: bool) -> tuple[str, str]:
-    top_bigrams = bigram_counts.most_common(50)
+    top_bigrams = bigram_counts.most_common(args.top_bigrams_to_choose)
     if not top_bigrams:
         raise ValueError("Not enough bigrams available to choose from.")
 
@@ -121,6 +121,20 @@ if __name__ == "__main__":
         "-p",
         action="store_true",
         help="Print the randomly chosen bigram among the top N bigrams.",
+    )
+    parser.add_argument(
+        "--num-words",
+        "-w",
+        type=int,
+        default=15,
+        help="Number of words to generate. Default is 15.",
+    )
+    parser.add_argument(
+        "--top-bigrams-to-choose",
+        "-tb",
+        type=int,
+        default=50,
+        help="Number of top bigrams to consider for choosing starting bigram. Default is 50.",
     )
     args = parser.parse_args()
     main()
