@@ -10,9 +10,9 @@ for line in reader:
         clean_word = word.strip(".;,-“’”:?—‘!()_").lower()
         window.append(clean_word)
 
-        if len(window) == 2:
-            key = window[0]
-            value = window[1]
+        if len(window) == 3:
+            key = window[0], window[1]
+            value = window[2]
             if key in successor_map:
                 successor_map[key].append(value)
             else:
@@ -20,11 +20,13 @@ for line in reader:
             window.pop(0)
 
 
-word = "the"
-print(word, end=" ")
-
+# random.seed(3)
+# word1 & word2 need to form a bigram that is present in the source text
+word1 = "the"
+word2 = "lawyer"
 
 for i in range(15):
-    successors = successor_map[word]
-    word = random.choice(successors)
-    print(word, end=" ")
+    print(word1, end=" ")
+    successors = successor_map[(word1, word2)]
+    word3 = random.choice(successors)
+    word1, word2 = word2, word3
