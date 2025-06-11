@@ -1,14 +1,15 @@
+import argparse
 import random
 
 # set the seed of PRNG to get predictive results
 # random.seed(3)
 
-reader = open("data/jekyll.txt")
-successor_map = {}
-window = []
-
 
 def main() -> None:
+    reader = open(args.input_file_path)
+    successor_map = {}
+    window = []
+
     for line in reader:
         for word in line.split():
             clean_word = word.strip(".;,-“’”:?—‘!()_").lower()
@@ -37,4 +38,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-        main()
+    parser = argparse.ArgumentParser(
+        description="Generate text from a text file using bigrams."
+    )
+    parser.add_argument("input_file_path", help="Path to the input text file.")
+    args = parser.parse_args()
+    main()
