@@ -12,7 +12,9 @@ def main() -> None:
 
     for line in reader:
         for word in line.split():
-            clean_word = word.strip(".;,-“’”:?—‘!()_").lower()
+            clean_word = (
+                word.strip(".;,-“’”:?—‘!()_").lower() if args.clean_words else word
+            )
             window.append(clean_word)
 
             if len(window) == 3:
@@ -46,6 +48,13 @@ if __name__ == "__main__":
         "-i",
         help="Comma-separated words to start generation. They need to form a bigram that is present in the source text. Default is 'the,lawyer'.",
         default="the,lawyer",
+    )
+    parser.add_argument(
+        "--no-clean",
+        "-n",
+        action="store_false",
+        dest="clean_words",
+        help="Disable word cleaning (stripping punctuation and converting to lowercase).",
     )
     args = parser.parse_args()
     main()
