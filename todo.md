@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] add main function
+- [x] add main function
 - [ ] input file as first CLI parameter
 - [ ] add CLI params (optional) for passing word1, word2 from CLI
     - actually one parameter of type tuple (must be two words, separated by comma)
