@@ -1,3 +1,6 @@
+import random
+
+
 reader = open("data/jekyll.txt")
 successor_map = {}
 window = []
@@ -16,4 +19,12 @@ for line in reader:
                 successor_map[key] = [value]
             window.pop(0)
 
-print(successor_map["danger"])
+
+word = "the"
+print(word, end=" ")
+
+
+for i in range(15):
+    successors = successor_map[word]
+    word = random.choice(successors)
+    print(word, end=" ")
