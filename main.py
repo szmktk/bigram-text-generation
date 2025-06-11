@@ -24,9 +24,8 @@ def main() -> None:
                     successor_map[key] = [value]
                 window.pop(0)
 
-    # word1 & word2 need to form a bigram that is present in the source text
-    word1 = "the"
-    word2 = "lawyer"
+    initial_bigram = tuple(args.initial_bigram.split(","))
+    word1, word2 = initial_bigram
 
     for _ in range(15):
         print(word1, end=" ")
@@ -42,5 +41,11 @@ if __name__ == "__main__":
         description="Generate text from a text file using bigrams."
     )
     parser.add_argument("input_file_path", help="Path to the input text file.")
+    parser.add_argument(
+        "--initial-bigram",
+        "-i",
+        help="Comma-separated words to start generation. They need to form a bigram that is present in the source text. Default is 'the,lawyer'.",
+        default="the,lawyer",
+    )
     args = parser.parse_args()
     main()
