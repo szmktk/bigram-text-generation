@@ -2,6 +2,7 @@ import argparse
 import glob
 import os
 import random
+import sys
 from collections import Counter
 from io import TextIOWrapper
 
@@ -55,6 +56,9 @@ def choose_random_bigram(bigram_counts: Counter, print_bigram: bool) -> tuple[st
 
 
 def process_files(successor_map: dict, bigram_counts: Counter) -> None:
+    if not os.path.exists(args.input_dir):
+        sys.exit(f"Error: The input directory '{args.input_dir}' does not exist.")
+
     for file_path in glob.glob(os.path.join(args.input_dir, "*.txt")):
         with open(file_path, "r") as reader:
             process_reader(reader, successor_map, bigram_counts)
