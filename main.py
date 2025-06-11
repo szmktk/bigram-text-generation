@@ -27,10 +27,10 @@ def main() -> None:
     word1, word2 = initial_bigram
 
     for _ in range(args.num_words):
-        print(word1, end=" ")
         successors = successor_map.get((word1, word2), None)
         if not successors:
-            break
+            sys.exit(f"Bigram {initial_bigram} not found in source text corpus")
+        print(word1, end=" ")
         word3 = random.choice(successors)
         word1, word2 = word2, word3
 
@@ -47,7 +47,7 @@ def print_most_common_bigrams(bigram_counts: Counter, n_common_bigrams: int) -> 
 def choose_random_bigram(bigram_counts: Counter, print_bigram: bool) -> tuple[str, str]:
     top_bigrams = bigram_counts.most_common(args.top_bigrams_to_choose)
     if not top_bigrams:
-        raise ValueError("Not enough bigrams available to choose from.")
+        sys.exit("Not enough bigrams available to choose from.")
 
     chosen_bigram = random.choice([bigram for bigram, _ in top_bigrams])
     if print_bigram:
