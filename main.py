@@ -1,12 +1,14 @@
 import argparse
 import random
+from collections import Counter
 
-# set the seed of PRNG to get predictive results
+# set the seed of PRNG to get predictable results
 # random.seed(3)
 
 
 def main() -> None:
     reader = open(args.input_file_path)
+    bigram_counts = Counter()
     successor_map = {}
     window = []
 
@@ -24,7 +26,11 @@ def main() -> None:
                     successor_map[key].append(value)
                 else:
                     successor_map[key] = [value]
+                bigram_counts[key] += 1
                 window.pop(0)
+
+    if args.top_bigrams > 0:
+        print_most_common_bigrams(bigram_counts, args.top_bigrams)
 
     initial_bigram = tuple(args.initial_bigram.split(","))
     word1, word2 = initial_bigram
@@ -35,6 +41,13 @@ def main() -> None:
         word3 = random.choice(successors)
         word1, word2 = word2, word3
 
+    print()
+
+
+def print_most_common_bigrams(bigram_counts: Counter, n_common_bigrams: int) -> None:
+    print(f"Top {n_common_bigrams} most common bigrams:")
+    for bigram, count in bigram_counts.most_common(n_common_bigrams):
+        print(f"{bigram}: {count}")
     print()
 
 
@@ -55,6 +68,13 @@ if __name__ == "__main__":
         action="store_false",
         dest="clean_words",
         help="Disable word cleaning (stripping punctuation and converting to lowercase).",
+    )
+    parser.add_argument(
+        "--top-bigrams",
+        "-t",
+        type=int,
+        default=0,
+        help="Print top n most common bigrams found in the source text.",
     )
     args = parser.parse_args()
     main()
