@@ -6,15 +6,23 @@ import sys
 from collections import Counter
 from io import TextIOWrapper
 
+from memory_profiler import profile
+
 # set the seed of PRNG to get predictable results
 # random.seed(3)
 
 
 def main() -> None:
+    global process_reader
+    process_reader = (
+        profile(_process_reader) if args.profile_memory else _process_reader
+    )
+    process_files = profile(_process_files) if args.profile_memory else _process_files
+
     bigram_counts = Counter()
     successor_map = {}
 
-    process_files(successor_map, bigram_counts)
+    process_files(successor_map, bigram_counts)  # type: ignore
 
     if args.top_bigrams > 0:
         print_most_common_bigrams(bigram_counts, args.top_bigrams)
@@ -55,16 +63,16 @@ def choose_random_bigram(bigram_counts: Counter, print_bigram: bool) -> tuple[st
     return chosen_bigram
 
 
-def process_files(successor_map: dict, bigram_counts: Counter) -> None:
+def _process_files(successor_map: dict, bigram_counts: Counter) -> None:
     if not os.path.exists(args.input_dir):
         sys.exit(f"Error: The input directory '{args.input_dir}' does not exist.")
 
     for file_path in glob.glob(os.path.join(args.input_dir, "*.txt")):
         with open(file_path, "r") as reader:
-            process_reader(reader, successor_map, bigram_counts)
+            process_reader(reader, successor_map, bigram_counts)  # type: ignore
 
 
-def process_reader(
+def _process_reader(
     reader: TextIOWrapper, successor_map: dict, bigram_counts: Counter
 ) -> None:
     window = []
@@ -139,6 +147,12 @@ if __name__ == "__main__":
         type=int,
         default=50,
         help="Number of top bigrams to consider for choosing starting bigram. Default is 50.",
+    )
+    parser.add_argument(
+        "--profile-memory",
+        "-x",
+        action="store_true",
+        help="Enable memory profiling (when memory-profiler is installed).",
     )
     args = parser.parse_args()
     main()
